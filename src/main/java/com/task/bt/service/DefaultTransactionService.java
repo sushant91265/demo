@@ -31,12 +31,16 @@ public class DefaultTransactionService implements TransactionService {
     }
 
     @Override
-    public double getMonthlyBalance(int month, int year) {
+    public Double getMonthlyBalance(int month, int year) {
+        if (month < 1 || year < 0 || month > 12) throw new IllegalArgumentException("Invalid Month or year");
+
         return transactionCalculator.getMonthlyBalance(month, year);
     }
 
     @Override
-    public double getCumulativeBalance(int endMonth, int endYear) {
+    public Double getCumulativeBalance(int endMonth, int endYear) {
+        if (endMonth < 1 || endYear < 0 || endMonth > 12) throw new IllegalArgumentException("Invalid Month or year");
+
         return transactionCalculator.getCumulativeBalance(endMonth, endYear);
     }
 }

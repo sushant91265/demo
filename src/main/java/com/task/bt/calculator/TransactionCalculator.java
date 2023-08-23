@@ -1,6 +1,6 @@
 package com.task.bt.calculator;
 
 public interface TransactionCalculator {
-    double getMonthlyBalance(int month, int year);
-    double getCumulativeBalance(int endMonth, int endYear);
+    Double getMonthlyBalance(int month, int year);
+    Double getCumulativeBalance(int endMonth, int endYear);
 }

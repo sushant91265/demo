@@ -15,13 +15,13 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @GetMapping("/monthly-balance")
-    public double getMonthlyBalance(@RequestParam int month, @RequestParam int year) {
+    @GetMapping(path = "/monthly-balance", produces = "text/plain")
+    public Double getMonthlyBalance(@RequestParam int month, @RequestParam int year) {
         return transactionService.getMonthlyBalance(month, year);
     }
 
-    @GetMapping("/cumulative-balance")
-    public double getCumulativeBalance(@RequestParam int endMonth, @RequestParam int endYear) {
+    @GetMapping(path = "/cumulative-balance", produces = "text/plain")
+    public Double getCumulativeBalance(@RequestParam int endMonth, @RequestParam int endYear) {
         return transactionService.getCumulativeBalance(endMonth, endYear);
     }
 }
