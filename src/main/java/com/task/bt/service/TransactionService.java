@@ -7,6 +7,7 @@ import java.util.List;
 public interface TransactionService {
     List<Transaction> fetchTransactions();
     void processTransactions(List<Transaction> transactions);
+
     double getMonthlyBalance(int month, int year);
     double getCumulativeBalance(int endMonth, int endYear);
 }
