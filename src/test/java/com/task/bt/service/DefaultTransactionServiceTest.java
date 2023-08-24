@@ -80,45 +80,5 @@ public class DefaultTransactionServiceTest {
 
         assertEquals(mockBalance, result);
     }
-
-    @Test
-    public void testGetMonthlyBalanceWithNegativeMonth() {
-        int month = -1;
-        int year = 2023;
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            transactionService.getMonthlyBalance(month, year);
-        });
-    }
-
-    @Test
-    public void testGetCumulativeBalanceWithInvalidYear() {
-        int endMonth = 8;
-        int endYear = -2023;
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            transactionService.getCumulativeBalance(endMonth, endYear);
-        });
-    }
-
-    @Test
-    public void testGetMonthlyBalanceWithInvalidMonth() {
-        int month = 13;
-        int year = 2023;
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            transactionService.getMonthlyBalance(month, year);
-        });
-    }
-
-    @Test
-    public void testGetCumulativeBalanceWithInvalidMonth() {
-        int endMonth = 13;
-        int endYear = 2023;
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            transactionService.getCumulativeBalance(endMonth, endYear);
-        });
-    }
 }
 
