@@ -10,6 +10,7 @@ Implement a solution with a following scenario:
 * If the application must be deployed to a server in remote location, how would you do it?
 
 # Solution:
+
 1) Tech Stack used: Java17, Spring Boot, Maven, JUnit5, Mockito, Lombok, Docker
 2) This is simple maven project design, not a full-fledged production ready spring boot application. Just to show the basic design of the application.
 3) This project is designed to be testable, and it has unit tests and integration tests.

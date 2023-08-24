@@ -8,4 +8,9 @@ import java.time.LocalDate;
 public class Transaction {
     private Double amount;
     private LocalDate date;
+
+    public Transaction(double amt, String date) {
+        this.amount = amt;
+        this.date = LocalDate.parse(date);
+    }
 }

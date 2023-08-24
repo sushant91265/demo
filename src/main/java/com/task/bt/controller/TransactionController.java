@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @Validated
 @Slf4j
@@ -33,8 +30,8 @@ public class TransactionController {
     }
 
     @GetMapping(path = "/cumulative-balance")
-    public Double getCumulativeBalance(@RequestParam @Min(1) @Max(12) int endMonth,
-                                       @RequestParam @Digits(integer = 4, fraction = 0) int endYear) {
+    public Double getCumulativeBalance(@RequestParam @Min(1) @Max(12) @NonNull int endMonth,
+                                       @RequestParam @Digits(integer = 4, fraction = 0) @NonNull  int endYear) {
         return transactionService.getCumulativeBalance(endMonth, endYear);
     }
 }

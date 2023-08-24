@@ -25,7 +25,6 @@ public class DefaultTransactionService implements TransactionService {
 
     @Override
     public List<Transaction> fetchTransactions() {
-        //TODO: handle exceptions?
         return transactionFetcher.fetchTransactions();
     }
 

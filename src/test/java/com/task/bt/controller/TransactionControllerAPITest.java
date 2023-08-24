@@ -40,7 +40,7 @@ public class TransactionControllerAPITest {
                         .param("year", String.valueOf(year)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").value(5000));
+                .andExpect(MockMvcResultMatchers.jsonPath("$").value(mockBalance));
     }
 
     @Test
