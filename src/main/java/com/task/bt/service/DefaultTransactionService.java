@@ -4,11 +4,13 @@ import com.task.bt.calculator.TransactionCalculator;
 import com.task.bt.client.TransactionFetcher;
 import com.task.bt.model.Transaction;
 import com.task.bt.processor.TransactionProcessor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class DefaultTransactionService implements TransactionService {
     private TransactionFetcher transactionFetcher;
     private TransactionProcessor transactionProcessor;
