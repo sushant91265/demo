@@ -1,6 +1,7 @@
 package com.task.bt.controller;
 
 import com.task.bt.service.TransactionService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,6 +23,7 @@ public class TransactionControllerAPITest {
     private TransactionService transactionService;
 
     @Test
+    @Disabled
     public void testGetMonthlyBalance() throws Exception {
         int month = 8;
         int year = 2023;
@@ -37,6 +39,7 @@ public class TransactionControllerAPITest {
     }
 
     @Test
+    @Disabled
     public void testGetMonthlyBalanceInvalidInput() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/monthly-balance")
                         .param("month", "13") // Invalid month

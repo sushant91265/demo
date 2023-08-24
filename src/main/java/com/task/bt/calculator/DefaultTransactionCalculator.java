@@ -1,5 +1,8 @@
 package com.task.bt.calculator;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DefaultTransactionCalculator implements TransactionCalculator {
     @Override
     public Double getMonthlyBalance(int month, int year) {
