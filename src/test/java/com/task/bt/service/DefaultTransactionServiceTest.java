@@ -1,7 +1,7 @@
 package com.task.bt.service;
 
 import com.task.bt.calculator.TransactionCalculator;
-import com.task.bt.client.TransactionFetcher;
+import com.task.bt.client.InternalTransactionApi;
 import com.task.bt.model.Transaction;
 import com.task.bt.processor.TransactionProcessor;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DefaultTransactionServiceTest {
 
     @Mock
-    private TransactionFetcher transactionFetcher;
+    private InternalTransactionApi transactionFetcher;
 
     @Mock
     private TransactionProcessor transactionProcessor;

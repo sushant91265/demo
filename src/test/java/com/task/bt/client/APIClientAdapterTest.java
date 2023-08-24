@@ -13,12 +13,12 @@ import static org.mockito.Mockito.when;
 
 class APIClientAdapterTest {
 
-    private TransactionFetcher mockApi;
+    private ExternalTransactionApi mockApi;
     private APIClientAdapter adapter;
 
     @BeforeEach
     void setUp() {
-        mockApi = mock(TransactionFetcher.class);
+        mockApi = mock(ExternalTransactionApi.class);
         adapter = new APIClientAdapter(mockApi);
     }
 

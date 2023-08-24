@@ -1,5 +1,6 @@
-package com.task.bt.controller;
+package com.task.bt;
 
+import com.task.bt.controller.TransactionController;
 import com.task.bt.service.TransactionService;
 import jakarta.servlet.ServletException;
 import jakarta.validation.ConstraintViolationException;

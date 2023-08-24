@@ -4,6 +4,6 @@ import com.task.bt.model.Transaction;
 
 import java.util.List;
 
-public interface TransactionFetcher {
+public interface InternalTransactionApi {
     List<Transaction> fetchTransactions();
 }

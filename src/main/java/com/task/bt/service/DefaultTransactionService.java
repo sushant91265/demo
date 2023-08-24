@@ -1,7 +1,7 @@
 package com.task.bt.service;
 
 import com.task.bt.calculator.TransactionCalculator;
-import com.task.bt.client.TransactionFetcher;
+import com.task.bt.client.InternalTransactionApi;
 import com.task.bt.model.Transaction;
 import com.task.bt.processor.TransactionProcessor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,11 +12,11 @@ import java.util.List;
 @Service
 @Slf4j
 public class DefaultTransactionService implements TransactionService {
-    private TransactionFetcher transactionFetcher;
+    private InternalTransactionApi transactionFetcher;
     private TransactionProcessor transactionProcessor;
     private TransactionCalculator transactionCalculator;
 
-    public DefaultTransactionService(TransactionFetcher transactionFetcher, TransactionCalculator transactionCalculator,
+    public DefaultTransactionService(InternalTransactionApi transactionFetcher, TransactionCalculator transactionCalculator,
                                      TransactionProcessor transactionProcessor) {
         this.transactionFetcher = transactionFetcher;
         this.transactionCalculator = transactionCalculator;
