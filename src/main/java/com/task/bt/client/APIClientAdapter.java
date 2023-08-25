@@ -1,5 +1,7 @@
 package com.task.bt.client;
 
+import com.task.bt.exception.ExternalApiException;
+import com.task.bt.exception.InternalApiException;
 import com.task.bt.model.Transaction;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,10 @@ public class APIClientAdapter implements InternalTransactionApi {
     }
     @Override
     public List<Transaction> fetchTransactions() {
-        return externalApi.fetchTransactions();
+        try {
+            return externalApi.fetchTransactions();
+        } catch (Exception e) {
+            throw new InternalApiException("Error fetching external transactions", e);
+        }
     }
 }

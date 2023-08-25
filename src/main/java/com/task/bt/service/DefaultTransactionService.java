@@ -2,6 +2,7 @@ package com.task.bt.service;
 
 import com.task.bt.calculator.TransactionCalculator;
 import com.task.bt.client.InternalTransactionApi;
+import com.task.bt.exception.ServiceException;
 import com.task.bt.model.Transaction;
 import com.task.bt.processor.TransactionProcessor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,11 @@ public class DefaultTransactionService implements TransactionService {
 
     @Override
     public List<Transaction> fetchTransactions() {
-        return transactionFetcher.fetchTransactions();
+        try {
+            return transactionFetcher.fetchTransactions();
+        } catch (Exception e) {
+            throw new ServiceException("Error fetching transactions", e);
+        }
     }
 
     @Override

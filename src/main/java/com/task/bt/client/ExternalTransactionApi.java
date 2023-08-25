@@ -6,4 +6,8 @@ import java.util.List;
 
 public interface ExternalTransactionApi {
     List<Transaction> fetchTransactions();
+
+    List<Transaction> fetchTransactions(int page, int size);
+
+
 }
