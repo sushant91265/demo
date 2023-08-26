@@ -9,6 +9,6 @@ import java.util.List;
 public class DefaultTransactionProcessor implements TransactionProcessor {
     @Override
     public void processTransactions(List<Transaction> transactions) {
-        //TODO: implement this method
+        //TODO: write any processing logic for the transactions
     }
 }

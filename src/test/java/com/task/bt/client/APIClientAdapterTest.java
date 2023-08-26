@@ -1,55 +1,64 @@
 package com.task.bt.client;
 
 import com.task.bt.client.external.ExternalTransactionApi;
+import com.task.bt.exception.InternalApiException;
 import com.task.bt.model.Transaction;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-class APIClientAdapterTest {
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 
-    private ExternalTransactionApi mockApi;
+@ExtendWith(MockitoExtension.class)
+public class APIClientAdapterTest {
+
+    @Mock
+    private ExternalTransactionApi mockExternalTransactionApi;
+
+    @InjectMocks
     private APIClientAdapter adapter;
+
     @Value("${external.api.url}")
     private String url;
 
-    @BeforeEach
-    void setUp() {
-        mockApi = mock(ExternalTransactionApi.class);
-        adapter = new APIClientAdapter(mockApi);
-    }
-
     @Test
     void testFetchTransactions() {
+
         List<Transaction> mockTransactions = Arrays.asList(
                 new Transaction(100.0, "2023-08-01"),
                 new Transaction(200.0, "2023-08-02")
         );
-        when(mockApi.fetchTransactions(url)).thenReturn(mockTransactions);
+        CompletableFuture<List<Transaction>> futureMockTransactions = CompletableFuture.completedFuture(mockTransactions);
 
-        List<Transaction> bankTransactions = adapter.fetchTransactions();
+        when(mockExternalTransactionApi.fetchTransactions(eq(url), eq(1), eq(100), eq(Transaction.class)))
+                .thenReturn(futureMockTransactions);
 
-        assertEquals(2, bankTransactions.size());
-        assertEquals(100.0, bankTransactions.get(0).getAmount());
-        assertEquals("2023-08-01", bankTransactions.get(0).getDate().toString());
+        List<Transaction> result = adapter.fetchTransactions();
+
+        assertEquals(2, result.size());
+        assertEquals(100.0, result.get(0).getAmount());
+        assertEquals("2023-08-01", result.get(0).getDate().toString());
     }
 
     @Test
-    void testFetchEmptyTransactions() {
-        List<Transaction> mockTransactions = Collections.emptyList();
+    void testFetchTransactionsWithError() {
 
-        when(mockApi.fetchTransactions(url)).thenReturn(mockTransactions);
+        CompletableFuture<List<Transaction>> futureMockTransactions = new CompletableFuture<>();
+        futureMockTransactions.completeExceptionally(new RuntimeException("Test exception"));
 
-        List<Transaction> bankTransactions = adapter.fetchTransactions();
+        when(mockExternalTransactionApi.fetchTransactions(anyString(), anyInt(), anyInt(), eq(Transaction.class)))
+                .thenReturn(futureMockTransactions);
 
-        assertEquals(0, bankTransactions.size());
+        assertThrows(InternalApiException.class, () -> adapter.fetchTransactions());
     }
 }

@@ -28,4 +28,5 @@ Implement a solution with a following scenario:
 4) External API might not be available all the time. >> can be handled **with timeout**.
 5) Data retrieval from external API might be time-consuming. >> can be handled **with @Async or CompletableFuture**.
 6) External API might be down. >> can be handled **with circuit breaker**.
+7) What if the external API change the response. >> can be handled with **extensible design**.
 

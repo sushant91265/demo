@@ -1,10 +1,10 @@
 package com.task.bt.client.external;
 
-import com.task.bt.model.Transaction;
-
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface ExternalTransactionApi {
 
-    List<Transaction> fetchTransactions(String url);
+    <T> CompletableFuture<List<T>> fetchTransactions(String url, int page, int size, Class<T> responseType);
+
 }

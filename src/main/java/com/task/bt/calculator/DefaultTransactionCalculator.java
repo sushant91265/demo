@@ -15,6 +15,11 @@ public class DefaultTransactionCalculator implements TransactionCalculator {
     @Override
     public Double getCumulativeBalance(int endMonth, int endYear) {
         //TODO: Logic to calculate cumulative balance
+        /*
+        cumulative mhnje add karaycha e fkt..je pan dates yetil tyanla stream karun sum gheun takaycha
+        split by year*month
+        Cumulative Balance = Opening Balance + Debit - Credit
+         */
         return null;
     }
 }

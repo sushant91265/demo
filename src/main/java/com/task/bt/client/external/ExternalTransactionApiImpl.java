@@ -1,6 +1,6 @@
 package com.task.bt.client.external;
 
-import com.task.bt.model.Transaction;
+import com.task.bt.exception.ExternalApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,36 +9,39 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Component
 @Slf4j
-public class ExternalTransactionApiImpl {
+public class ExternalTransactionApiImpl implements ExternalTransactionApi {
 
-    private final ExternalTransactionApi transactionFetcher;
+    private final TransactionFetcherStrategy transactionFetcherStrategy;
     @Value("${external.api.retry.attempts}")
     private int retryAttempts;
 
     @Value("${external.api.retry.delay}")
     private int retryDelay;
 
-    public ExternalTransactionApiImpl(@Qualifier("paginatedExternalTransactionApi") ExternalTransactionApi transactionFetcher) {
-        this.transactionFetcher = transactionFetcher;
+    public ExternalTransactionApiImpl(@Qualifier("paginatedExternalTransactionApi") TransactionFetcherStrategy transactionFetcherStrategy) {
+        this.transactionFetcherStrategy = transactionFetcherStrategy;
     }
+
+    @Override
+    public <T> CompletableFuture<List<T>> fetchTransactions(String url, int page, int size, Class<T> responseType) {
+        return fetchTransactionsWithRetry(url, page, size, responseType);
+    }
+
     @Retryable(maxAttemptsExpression = "#{${externalTransactionApiImpl.retryAttempts}}",
                backoff = @Backoff(delayExpression = "#{${externalTransactionApiImpl.retryDelay}}"))
-    public CompletableFuture<List<Transaction>> fetchTransactions(String url) {
+    protected  <T> CompletableFuture<List<T>> fetchTransactionsWithRetry(String url, int page, int size, Class<T> responseType) {
         try {
-            CompletableFuture<List<Transaction>> futureTransactions = CompletableFuture.supplyAsync(() ->
-                    transactionFetcher.fetchTransactions(url)
-            );
+                CompletableFuture<List<T>> futureTransactions = CompletableFuture.supplyAsync(() ->
+                        transactionFetcherStrategy.fetchTransactions(url, page, size, responseType));
+                return futureTransactions;
 
-            return futureTransactions;
         } catch (ResourceAccessException ex) {
-            log.error("External API request failed due to connectivity issues.", ex);
-            return CompletableFuture.completedFuture(Collections.emptyList());
+            throw new ExternalApiException("External API request failed due to connectivity issues.", ex);
         }
     }
 }

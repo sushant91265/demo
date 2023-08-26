@@ -29,7 +29,7 @@ public class DefaultTransactionService implements TransactionService {
         try {
             return transactionFetcher.fetchTransactions();
         } catch (Exception e) {
-            throw new ServiceException("Error fetching transactions", e);
+            throw new ServiceException("Error while fetching transactions", e);
         }
     }
 
