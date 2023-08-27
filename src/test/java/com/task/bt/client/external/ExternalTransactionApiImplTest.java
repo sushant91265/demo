@@ -6,9 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.util.Collections;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 import static org.awaitility.Awaitility.*;
 
 @ContextConfiguration(classes = ExternalTransactionApiTestConfig.class)
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
 class ExternalTransactionApiImplTest {
 
     private TransactionFetcherStrategy transactionFetcher;
@@ -49,7 +49,7 @@ class ExternalTransactionApiImplTest {
                 .thenThrow(new ResourceAccessException("Connection error"))
                 .thenThrow(new ResourceAccessException("Connection error"))
                 .thenThrow(new ResourceAccessException("Connection error"))
-                .thenReturn(Collections.singletonList(new Transaction(100,"2023-08-08")));
+                .thenReturn(Collections.singletonList(new Transaction(100.0,"2023-08-08")));
 
         await().atMost(3, SECONDS).untilAsserted(() -> {
             CompletableFuture<List<Transaction>> result = externalTransactionApi.fetchTransactions(apiUrl, 1, 20, dataModelClass);

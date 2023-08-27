@@ -2,20 +2,28 @@ package com.task.bt.service;
 
 import com.task.bt.calculator.TransactionCalculator;
 import com.task.bt.client.InternalTransactionApi;
+import com.task.bt.config.ExternalTransactionApiTestConfig;
 import com.task.bt.model.Transaction;
 import com.task.bt.processor.TransactionProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = ExternalTransactionApiTestConfig.class)
 public class DefaultTransactionServiceTest {
 
     @Mock
@@ -30,6 +38,9 @@ public class DefaultTransactionServiceTest {
     @InjectMocks
     private DefaultTransactionService transactionService;
 
+    @Autowired
+    private Class<Transaction> dataModelClass;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -37,10 +48,12 @@ public class DefaultTransactionServiceTest {
 
     @Test
     public void testFetchTransactions() {
-        List<Transaction> mockTransactions = new ArrayList<>();
-        when(transactionFetcher.fetchTransactions()).thenReturn(mockTransactions);
+        List<Transaction> mockTransactions = Arrays.asList(new Transaction(100.00, "2023-09-09")
+                                                          , new Transaction(102.00, "2023-09-09"));
 
-        List<Transaction> result = transactionService.fetchTransactions();
+        when(transactionFetcher.fetchTransactions(dataModelClass)).thenReturn(mockTransactions);
+
+        List<Transaction> result = transactionService.fetchTransactions(dataModelClass);
 
         assertEquals(mockTransactions, result);
     }

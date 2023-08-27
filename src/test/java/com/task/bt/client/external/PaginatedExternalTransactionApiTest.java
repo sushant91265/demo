@@ -45,7 +45,7 @@ public class PaginatedExternalTransactionApiTest {
 
     @Test
     void testFetchTransactionsWithPagination() {
-        Transaction[] transactionsArray = { new Transaction(10,"2022-09-09"), new Transaction(11,"2022-09-09") };
+        Transaction[] transactionsArray = { new Transaction(10.0,"2022-09-09"), new Transaction(11.0,"2022-09-09") };
         ResponseEntity<List<Transaction>> responseEntity = new ResponseEntity<>(List.of(transactionsArray), HttpStatus.OK);
 
         when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class),

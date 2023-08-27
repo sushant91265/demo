@@ -30,6 +30,7 @@ Implement a solution with a following scenario:
 6) External API might be down. >> can be handled **with circuit breaker**.
 7) What if the external API change the response. >> can be handled with **extensible design**.
 8) What if the external API brings breaking change. >> need to handle with **versioning and previous version support**.
+9) Our application can have different profiles like dev, qa, prod. >> can be handled with **spring profiles**.
 
 
 # CodeCoverage Report:

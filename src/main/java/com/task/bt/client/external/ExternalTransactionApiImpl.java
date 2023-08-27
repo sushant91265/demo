@@ -41,6 +41,7 @@ public class ExternalTransactionApiImpl implements ExternalTransactionApi {
     @Retryable(maxAttemptsExpression = "#{${externalTransactionApiImpl.retryAttempts}}",
                backoff = @Backoff(delayExpression = "#{${externalTransactionApiImpl.retryDelay}}"))
     protected  <T> CompletableFuture<List<T>> fetchTransactionsWithRetry(String url, int page, int size, Class<T> responseType) {
+
         try {
                 CompletableFuture<List<T>> futureTransactions = CompletableFuture.supplyAsync(() ->
                         transactionFetcherStrategy.fetchTransactions(url, page, size, responseType));

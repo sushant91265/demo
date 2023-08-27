@@ -12,17 +12,17 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = ExternalTransactionApiTestConfig.class)
 public class APIClientAdapterTest {
 
@@ -35,22 +35,19 @@ public class APIClientAdapterTest {
     @InjectMocks
     private APIClientAdapter adapter;
 
-    @Value("${external.api.url}")
-    private String url = "https://some-api-url.com";
-
     @Test
     void testFetchTransactions() {
-
         List<Transaction> mockTransactions = Arrays.asList(
                 new Transaction(100.0, "2023-08-01"),
                 new Transaction(200.0, "2023-08-02")
         );
         CompletableFuture<List<Transaction>> futureMockTransactions = CompletableFuture.completedFuture(mockTransactions);
 
-        when(mockExternalTransactionApi.fetchTransactions(eq(url), eq(1), eq(100), eq(dataModelClass)))
+        ReflectionTestUtils.setField(adapter, "url", "https://some-api-url.com");
+        when(mockExternalTransactionApi.fetchTransactions(anyString(), anyInt(), anyInt(), any(Class.class)))
                 .thenReturn(futureMockTransactions);
 
-        List<Transaction> result = adapter.fetchTransactions();
+        List<Transaction> result = adapter.fetchTransactions(dataModelClass);
 
         assertEquals(2, result.size());
         assertEquals(100.0, result.get(0).getAmount());
@@ -66,6 +63,6 @@ public class APIClientAdapterTest {
         when(mockExternalTransactionApi.fetchTransactions(anyString(), anyInt(), anyInt(), eq(dataModelClass)))
                 .thenReturn(futureMockTransactions);
 
-        assertThrows(InternalApiException.class, () -> adapter.fetchTransactions());
+        assertThrows(InternalApiException.class, () -> adapter.fetchTransactions(dataModelClass));
     }
 }

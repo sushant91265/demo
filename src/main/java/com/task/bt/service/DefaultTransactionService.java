@@ -25,17 +25,21 @@ public class DefaultTransactionService implements TransactionService {
     }
 
     @Override
-    public List<Transaction> fetchTransactions() {
+    public <T> List<T> fetchTransactions(Class<T> responseType) {
         try {
-            return transactionFetcher.fetchTransactions();
-        } catch (Exception e) {
+            return transactionFetcher.fetchTransactions(responseType);
+        } catch (RuntimeException e) {
             throw new ServiceException("Error while fetching transactions", e);
         }
     }
 
     @Override
-    public void processTransactions(List<Transaction> transactions) {
-        transactionProcessor.processTransactions(transactions);
+    public <T> void processTransactions(List<T> transactions) {
+        try {
+            transactionProcessor.processTransactions((List<Transaction>) transactions);
+        } catch (RuntimeException e) {
+            throw new ServiceException("Error while processing transactions", e);
+        }
     }
 
     @Override

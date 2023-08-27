@@ -9,8 +9,8 @@ public class Transaction {
     private Double amount;
     private LocalDate date;
 
-    public Transaction(double amt, String date) {
-        this.amount = amt;
+    public Transaction(Double amount, String date) {
+        this.amount = amount;
         this.date = LocalDate.parse(date);
     }
 }
