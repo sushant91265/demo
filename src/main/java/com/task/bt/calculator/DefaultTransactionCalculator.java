@@ -3,6 +3,10 @@ package com.task.bt.calculator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+/**
+ * Default implementation of {@link TransactionCalculator} interface.
+ * This class is responsible for calculating monthly and cumulative balance.
+ */
 @Component
 @Slf4j
 public class DefaultTransactionCalculator implements TransactionCalculator {

@@ -29,4 +29,11 @@ Implement a solution with a following scenario:
 5) Data retrieval from external API might be time-consuming. >> can be handled **with @Async or CompletableFuture**.
 6) External API might be down. >> can be handled **with circuit breaker**.
 7) What if the external API change the response. >> can be handled with **extensible design**.
+8) What if the external API brings breaking change. >> need to handle with **versioning and previous version support**.
+
+
+# CodeCoverage Report:
+
+1) CodeCoverage report can be found under the '/demo/htmlReport/index.html' folder
+2) Current coverage percentage: >75%
 

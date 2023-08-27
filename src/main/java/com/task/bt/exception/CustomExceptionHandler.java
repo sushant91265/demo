@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
 
+/**
+ * This class is responsible for handling exceptions thrown by the application.
+ * It returns a response with appropriate HTTP status code and error message.
+ */
 @RestControllerAdvice
 @Slf4j
 public class CustomExceptionHandler {

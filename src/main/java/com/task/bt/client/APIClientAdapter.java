@@ -8,6 +8,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Implementation of {@link InternalTransactionApi} interface.
+ * This class is responsible for fetching transactions from external API.
+ * It uses {@link ExternalTransactionApi} to fetch transactions.
+ */
 @Component
 public class APIClientAdapter implements InternalTransactionApi {
     private final ExternalTransactionApi externalTransactionApi;

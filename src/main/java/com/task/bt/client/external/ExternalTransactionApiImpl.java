@@ -12,6 +12,12 @@ import org.springframework.web.client.ResourceAccessException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Implementation of {@link ExternalTransactionApi} interface.
+ * This class is responsible for fetching transactions from external API.
+ * It uses {@link TransactionFetcherStrategy} to fetch transactions.
+ * It uses Spring Retry to retry the external API call in case of failure.
+ */
 @Component
 @Slf4j
 public class ExternalTransactionApiImpl implements ExternalTransactionApi {

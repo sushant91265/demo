@@ -1,6 +1,7 @@
 package com.task.bt.client;
 
 import com.task.bt.client.external.ExternalTransactionApi;
+import com.task.bt.config.ExternalTransactionApiTestConfig;
 import com.task.bt.exception.InternalApiException;
 import com.task.bt.model.Transaction;
 import org.junit.jupiter.api.Test;
@@ -17,19 +18,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.context.ContextConfiguration;
 
 @ExtendWith(MockitoExtension.class)
+@ContextConfiguration(classes = ExternalTransactionApiTestConfig.class)
 public class APIClientAdapterTest {
 
     @Mock
     private ExternalTransactionApi mockExternalTransactionApi;
 
+    @Autowired
+    private Class<Transaction> dataModelClass;
+
     @InjectMocks
     private APIClientAdapter adapter;
 
     @Value("${external.api.url}")
-    private String url;
+    private String url = "https://some-api-url.com";
 
     @Test
     void testFetchTransactions() {
@@ -40,7 +47,7 @@ public class APIClientAdapterTest {
         );
         CompletableFuture<List<Transaction>> futureMockTransactions = CompletableFuture.completedFuture(mockTransactions);
 
-        when(mockExternalTransactionApi.fetchTransactions(eq(url), eq(1), eq(100), eq(Transaction.class)))
+        when(mockExternalTransactionApi.fetchTransactions(eq(url), eq(1), eq(100), eq(dataModelClass)))
                 .thenReturn(futureMockTransactions);
 
         List<Transaction> result = adapter.fetchTransactions();
@@ -56,7 +63,7 @@ public class APIClientAdapterTest {
         CompletableFuture<List<Transaction>> futureMockTransactions = new CompletableFuture<>();
         futureMockTransactions.completeExceptionally(new RuntimeException("Test exception"));
 
-        when(mockExternalTransactionApi.fetchTransactions(anyString(), anyInt(), anyInt(), eq(Transaction.class)))
+        when(mockExternalTransactionApi.fetchTransactions(anyString(), anyInt(), anyInt(), eq(dataModelClass)))
                 .thenReturn(futureMockTransactions);
 
         assertThrows(InternalApiException.class, () -> adapter.fetchTransactions());

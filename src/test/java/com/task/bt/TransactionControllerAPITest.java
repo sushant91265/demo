@@ -2,10 +2,6 @@ package com.task.bt;
 
 import com.task.bt.controller.TransactionController;
 import com.task.bt.service.TransactionService;
-import jakarta.servlet.ServletException;
-import jakarta.validation.ConstraintViolationException;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,8 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 import static org.mockito.Mockito.when;
@@ -29,6 +23,11 @@ public class TransactionControllerAPITest {
     @MockBean
     private TransactionService transactionService;
 
+    private final String monthlyBalanceUrlTemplate = "/api/v1/balances/monthly-balance";
+    private final String cumulativeBalanceUrlTemplate = "/api/v1/balances/cumulative-balance";
+    private final String invalidMonthError = "Invalid month";
+    private final String invalidYearError = "Invalid year";
+
     @Test
     public void testGetMonthlyBalance() throws Exception {
         int month = 8;
@@ -37,7 +36,7 @@ public class TransactionControllerAPITest {
 
         when(transactionService.getMonthlyBalance(month, year)).thenReturn(mockBalance);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/balances/monthly-balance")
+        mockMvc.perform(MockMvcRequestBuilders.get(monthlyBalanceUrlTemplate)
                         .param("month", String.valueOf(month))
                         .param("year", String.valueOf(year)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -50,11 +49,11 @@ public class TransactionControllerAPITest {
         int month = -1;
         int year = 2022;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/balances/monthly-balance")
+        mockMvc.perform(MockMvcRequestBuilders.get(monthlyBalanceUrlTemplate)
                         .param("month", String.valueOf(month))
                         .param("year", String.valueOf(year)))
                 .andExpect(MockMvcResultMatchers.status().is(400))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Invalid month"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value(invalidMonthError));
     }
 
     @Test
@@ -62,11 +61,11 @@ public class TransactionControllerAPITest {
         int month = 8;
         int year = 202;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/balances/monthly-balance")
+        mockMvc.perform(MockMvcRequestBuilders.get(monthlyBalanceUrlTemplate)
                         .param("month", String.valueOf(month))
                         .param("year", String.valueOf(year)))
                 .andExpect(MockMvcResultMatchers.status().is(400))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Invalid year"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value(invalidYearError));
     }
 
     @Test
@@ -77,7 +76,7 @@ public class TransactionControllerAPITest {
 
         when(transactionService.getCumulativeBalance(endMonth, endYear)).thenReturn(mockBalance);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/balances/cumulative-balance")
+        mockMvc.perform(MockMvcRequestBuilders.get(cumulativeBalanceUrlTemplate)
                         .param("endMonth", String.valueOf(endMonth))
                         .param("endYear", String.valueOf(endYear)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -90,11 +89,11 @@ public class TransactionControllerAPITest {
         int endMonth = -1;
         int endYear = 2022;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/balances/cumulative-balance")
+        mockMvc.perform(MockMvcRequestBuilders.get(cumulativeBalanceUrlTemplate)
                         .param("endMonth", String.valueOf(endMonth))
                         .param("endYear", String.valueOf(endYear)))
                 .andExpect(MockMvcResultMatchers.status().is(400))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Invalid month"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value(invalidMonthError));
     }
 
     @Test
@@ -102,10 +101,70 @@ public class TransactionControllerAPITest {
         int endMonth = 8;
         int endYear = 202;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/balances/cumulative-balance")
+        mockMvc.perform(MockMvcRequestBuilders.get(cumulativeBalanceUrlTemplate)
                         .param("endMonth", String.valueOf(endMonth))
                         .param("endYear", String.valueOf(endYear)))
                 .andExpect(MockMvcResultMatchers.status().is(400))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Invalid year"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value(invalidYearError));
+    }
+
+    @Test
+    public void testGetCumulativeBalanceWithNoYear() throws Exception {
+        int endMonth = 8;
+
+        mockMvc.perform(MockMvcRequestBuilders.get(cumulativeBalanceUrlTemplate)
+                        .param("endMonth", String.valueOf(endMonth)))
+                .andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    @Test
+    public void testGetCumulativeBalanceWithNoMonth() throws Exception {
+        int endYear = 2023;
+
+        mockMvc.perform(MockMvcRequestBuilders.get(cumulativeBalanceUrlTemplate)
+                        .param("endYear", String.valueOf(endYear)))
+                .andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    @Test
+    public void testGetCumulativeBalanceWithoutAnyParam() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(cumulativeBalanceUrlTemplate))
+                .andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    @Test
+    public void testGetMonthlyBalanceWithNoYear() throws Exception {
+        int endMonth = 8;
+
+        mockMvc.perform(MockMvcRequestBuilders.get(monthlyBalanceUrlTemplate)
+                        .param("month", String.valueOf(endMonth)))
+                .andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    @Test
+    public void testGetMonthlyBalanceWithNoMonth() throws Exception {
+        int endYear = 2023;
+
+        mockMvc.perform(MockMvcRequestBuilders.get(monthlyBalanceUrlTemplate)
+                        .param("year", String.valueOf(endYear)))
+                .andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    @Test
+    public void testGetMonthlyBalanceWithoutAnyParam() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(monthlyBalanceUrlTemplate))
+                .andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    @Test
+    public void testBalancesAPIError() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/balances"))
+                .andExpect(MockMvcResultMatchers.status().is(404));
+    }
+
+    @Test
+    public void testAPIError() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/"))
+                .andExpect(MockMvcResultMatchers.status().is(404));
     }
 }
