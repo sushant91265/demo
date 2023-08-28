@@ -19,7 +19,10 @@ import java.util.concurrent.ExecutionException;
 public class APIClientAdapter implements InternalTransactionApi {
     private final ExternalTransactionApi externalTransactionApi;
     @Value("${external.api.url}")
-    private String url;
+    private String URL;
+
+    private final int PAGE = 1;
+    private final int SIZE = 100;
 
     public APIClientAdapter(ExternalTransactionApi externalTransactionApi) {
         this.externalTransactionApi = externalTransactionApi;
@@ -28,7 +31,7 @@ public class APIClientAdapter implements InternalTransactionApi {
     @Override
     public <T> List<T> fetchTransactions(Class<T> responseType) {
         try {
-            return (List<T>) externalTransactionApi.fetchTransactions(url, 1,100, responseType).get();
+            return externalTransactionApi.fetchTransactions(URL, PAGE, SIZE, responseType).get();
         } catch (RuntimeException | ExecutionException | InterruptedException e) {
             throw new InternalApiException("Error while fetching external transactions", e);
         }

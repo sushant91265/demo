@@ -28,12 +28,11 @@ public class NonPaginatedExternalTransactionApi implements TransactionFetcherStr
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
             HttpEntity<Void> entity = new HttpEntity<>(headers);
-
             ResponseEntity<List<T>> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
                     entity,
-                    new ParameterizedTypeReference<List<T>>() {
+                    new ParameterizedTypeReference<>() {
                     });
 
             return Optional.ofNullable(response.getBody())

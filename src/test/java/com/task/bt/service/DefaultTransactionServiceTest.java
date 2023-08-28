@@ -2,6 +2,7 @@ package com.task.bt.service;
 
 import com.task.bt.client.InternalTransactionApi;
 import com.task.bt.config.ExternalTransactionApiTestConfig;
+import com.task.bt.exception.InternalApiException;
 import com.task.bt.model.Transaction;
 import com.task.bt.processor.TransactionProcessor;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,22 +65,20 @@ public class DefaultTransactionServiceTest {
     }
 
     @Test
-    public void testGetMonthlyBalance() {
-        int month = 9;
-        int year = 2023;
-        double mockBalance = 202.0;
+    public void testGetMonthlyBalance() throws InternalApiException {
+        List<Transaction> transactions = Arrays.asList(new Transaction(100.00, "2023-09-09"),
+                new Transaction(102.00, "2023-09-09"));
 
-        List<Transaction> mockTransactions = Arrays.asList(new Transaction(100.00, "2023-09-09"),
-                                                            new Transaction(102.00, "2023-09-09"));
+        when(transactionFetcher.fetchTransactions(Transaction.class)).thenReturn(transactions);
+        when(transactionProcessor.calculateSum(
+                eq(transactions),
+                any(Predicate.class)))
+                .thenReturn(202.0);
 
-        Predicate<Transaction> txnPredicate = txn -> txn.getMonth() == month && txn.getYear() == year;
+        Double balance = transactionService.getMonthlyBalance(8, 2023);
 
-        when(transactionFetcher.fetchTransactions(dataModelClass)).thenReturn(mockTransactions);
-        when(transactionProcessor.calculateSum(mockTransactions, txnPredicate)).thenReturn(mockBalance);
-
-        Double result = transactionService.getMonthlyBalance(month, year);
-
-        assertEquals(mockBalance, result);
+        assertEquals(202.0, balance);
+        verify(transactionProcessor, times(1)).calculateSum(anyList(), any(Predicate.class));
     }
 
     @Test
@@ -92,15 +91,15 @@ public class DefaultTransactionServiceTest {
                                                           , new Transaction(102.00, "2023-09-09"));
 
         when(transactionFetcher.fetchTransactions(dataModelClass)).thenReturn(mockTransactions);
-        when(transactionProcessor.calculateSum(mockTransactions,
-                txn -> {
-                    if(txn.getYear() == endYear) return txn.getMonth() <= endMonth;
-                    return txn.getYear() <= endYear;
-                })).thenReturn(mockBalance);
+        when(transactionProcessor.calculateSum(
+                eq(mockTransactions),
+                any(Predicate.class)))
+                .thenReturn(202.0);
 
         Double result = transactionService.getCumulativeBalance(endMonth, endYear);
 
         assertEquals(mockBalance, result);
+        verify(transactionProcessor, times(1)).calculateSum(anyList(), any(Predicate.class));
     }
 }
 

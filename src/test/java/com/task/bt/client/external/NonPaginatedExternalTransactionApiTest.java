@@ -33,7 +33,7 @@ public class NonPaginatedExternalTransactionApiTest {
     @InjectMocks
     private NonPaginatedExternalTransactionApi api;
 
-    private final String apiUrl = "https://some-api-url.com";
+    private final String apiUrl = "dummy_url";
 
     @Autowired
     private Class<Transaction> dataModelClass;
@@ -46,7 +46,7 @@ public class NonPaginatedExternalTransactionApiTest {
         when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), any(ParameterizedTypeReference.class)))
                 .thenReturn(responseEntity);
 
-        List<Transaction> transactions = api.fetchTransactions(apiUrl, 0,0, dataModelClass);
+        List<Transaction> transactions = api.fetchTransactions(apiUrl, 1,10, dataModelClass);
 
         assertEquals(expectedTransactions, transactions);
     }
@@ -56,7 +56,7 @@ public class NonPaginatedExternalTransactionApiTest {
         when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(HttpEntity.class), any(ParameterizedTypeReference.class)))
                 .thenThrow(new RestClientException("Error"));
 
-        assertThrows(ExternalApiException.class, () -> api.fetchTransactions(apiUrl,  0,0, dataModelClass));
+        assertThrows(ExternalApiException.class, () -> api.fetchTransactions(apiUrl,  1,10, dataModelClass));
     }
 
     @Test

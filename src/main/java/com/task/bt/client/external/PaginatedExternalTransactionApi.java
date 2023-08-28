@@ -27,7 +27,7 @@ public class PaginatedExternalTransactionApi implements TransactionFetcherStrate
     @Override
     public <T> List<T> fetchTransactions(String url, int page, int size, Class<T> responseType) {
         try {
-                HttpHeaders headers = new HttpHeaders();
+            HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
             UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
@@ -40,7 +40,7 @@ public class PaginatedExternalTransactionApi implements TransactionFetcherStrate
                     uriBuilder.toUriString(),
                     HttpMethod.GET,
                     entity,
-                    new ParameterizedTypeReference<List<T>>() {
+                    new ParameterizedTypeReference<>() {
                     });
 
             return Optional.ofNullable(response.getBody())

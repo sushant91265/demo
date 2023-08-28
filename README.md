@@ -35,6 +35,6 @@ Implement a solution with a following scenario:
 
 # CodeCoverage Report:
 
-1) CodeCoverage report can be found under the '/demo/htmlReport/index.html' folder
+1) CodeCoverage report can be found under the '/demo/coverage/index.html' folder
 2) Current coverage percentage: >75%
 

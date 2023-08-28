@@ -11,6 +11,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * Implementation of {@link TransactionService} interface.
+ * This class is responsible for handling service layer.
+ */
+
 @Service
 @Slf4j
 public class DefaultTransactionService implements TransactionService {

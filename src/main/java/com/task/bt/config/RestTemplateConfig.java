@@ -20,6 +20,7 @@ public class RestTemplateConfig {
         factory.setConnectTimeout(connectionTimeout);
         factory.setReadTimeout(externalApiTimeout);
 
+        //provides buffering of outgoing/incoming streams, with multiple reads.
         BufferingClientHttpRequestFactory bufferingFactory = new BufferingClientHttpRequestFactory(factory);
 
         RestTemplate restTemplate = new RestTemplate(bufferingFactory);

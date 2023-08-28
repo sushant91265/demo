@@ -43,7 +43,7 @@ public class APIClientAdapterTest {
         );
         CompletableFuture<List<Transaction>> futureMockTransactions = CompletableFuture.completedFuture(mockTransactions);
 
-        ReflectionTestUtils.setField(adapter, "url", "https://some-api-url.com");
+        ReflectionTestUtils.setField(adapter, "URL", "dummy_url");
         when(mockExternalTransactionApi.fetchTransactions(anyString(), anyInt(), anyInt(), any(Class.class)))
                 .thenReturn(futureMockTransactions);
 
