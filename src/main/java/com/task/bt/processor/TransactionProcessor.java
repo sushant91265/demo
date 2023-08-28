@@ -1,9 +1,16 @@
 package com.task.bt.processor;
 
-import com.task.bt.model.Transaction;
-
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface TransactionProcessor {
-    <T> void processTransactions(List<T> transactions);
+
+    /**
+     * Returns the balance of the transactions that match the given predicate.
+     *
+     * @param transactions list of transactions
+     * @param filter       predicate to filter the transactions
+     * @return balance of the transactions
+     */
+    <T> Double calculateSum(List<T> transactions, Predicate<T> filter);
 }

@@ -3,6 +3,7 @@ package com.task.bt.model;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Data
 public class Transaction {
@@ -12,5 +13,13 @@ public class Transaction {
     public Transaction(Double amount, String date) {
         this.amount = amount;
         this.date = LocalDate.parse(date);
+    }
+
+    public int getMonth() {
+        return date.getMonthValue();
+    }
+
+    public int getYear() {
+        return date.getYear();
     }
 }
