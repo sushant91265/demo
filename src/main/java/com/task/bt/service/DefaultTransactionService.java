@@ -5,12 +5,10 @@ import com.task.bt.exception.InternalApiException;
 import com.task.bt.exception.ServiceException;
 import com.task.bt.model.BalanceResult;
 import com.task.bt.model.Transaction;
-import com.task.bt.processor.TransactionProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * Implementation of {@link TransactionService} interface.
@@ -21,11 +19,9 @@ import java.util.function.Predicate;
 @Slf4j
 public class DefaultTransactionService implements TransactionService {
     private final InternalTransactionApi transactionFetcher;
-    private final TransactionProcessor transactionProcessor;
 
-    public DefaultTransactionService(InternalTransactionApi transactionFetcher, TransactionProcessor transactionProcessor) {
+    public DefaultTransactionService(InternalTransactionApi transactionFetcher) {
         this.transactionFetcher = transactionFetcher;
-        this.transactionProcessor = transactionProcessor;
     }
 
     @Override
@@ -40,14 +36,18 @@ public class DefaultTransactionService implements TransactionService {
 
 
     private Double calculateMonthlyBalance(List<Transaction> transactions, int month, int year) {
-        Predicate<Transaction> filter = txn -> txn.getMonth() == month && txn.getYear() == year;
-        return transactionProcessor.calculateSum(transactions, filter);
+        return transactions.stream()
+                .filter(txn -> txn.getMonth() == month && txn.getYear() == year)
+                .mapToDouble(Transaction::getAmount)
+                .sum();
     }
 
     private Double calculateCumulativeBalance(List<Transaction> transactions, int endYear) {
-        // calculate cumulative balance from start of the year till endYear
-        Predicate<Transaction> filter = txn -> txn.getYear() == endYear;
-        return transactionProcessor.calculateSum(transactions, filter);
+        // cumulative balance from start of the year till endYear
+        return transactions.stream()
+                .filter(txn -> txn.getYear() == endYear)
+                .mapToDouble(Transaction::getAmount)
+                .sum();
     }
 
     /*

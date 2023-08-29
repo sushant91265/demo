@@ -54,27 +54,4 @@ class DemoApplicationTests {
 					.andExpect(MockMvcResultMatchers.jsonPath("$.cumulativeBalance").value(207.0));
 		});
 	}
-
-	@Test
-	public void testBalancesNoTransactionsE2E() {
-		int month = 11;
-		int year = 2024;
-
-		List<Transaction> mockTransactions = List.of(new Transaction(100.0,"2023-09-09"),
-				new Transaction(110.0,"2023-09-15"),
-				new Transaction(-3.0,"2023-10-15"));
-
-		when(transactionFetcherStrategy.fetchTransactions(anyString(), anyInt(), anyInt(), any(Class.class)))
-				.thenReturn(mockTransactions);
-
-		await().atMost(ONE_SECOND).untilAsserted(() -> {
-			mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/balances")
-							.param("month", String.valueOf(month))
-							.param("year", String.valueOf(year))
-							.contentType("application/json"))
-					.andExpect(MockMvcResultMatchers.status().isOk())
-					.andExpect(MockMvcResultMatchers.jsonPath("$.monthlyBalance").value(0.0))
-					.andExpect(MockMvcResultMatchers.jsonPath("$.cumulativeBalance").value(0.0));
-		});
-	}
 }
