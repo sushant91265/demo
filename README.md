@@ -18,7 +18,7 @@ Implement a solution with a following scenario:
 5) This project has a **docker-compose.yml** file, which can be used to build and run the docker image as a container.
 6) If we need to add more components to the project like database or queue or cache or any other component, we can add it to the **docker-compose.yml** file.
 7) If we decide to use cloud services like AWS, we can write the deployment script using **terraform and ansible**.
-8) OpenAPI documentation is available at: http://localhost:8080/swagger-ui.html
+8) OpenAPI documentation is available at: http://localhost:8080/swagger-ui/index.html
 
 # Unknowns:
 

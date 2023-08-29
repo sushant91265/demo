@@ -1,6 +1,7 @@
 package com.task.bt.service;
 
+import com.task.bt.model.BalanceResult;
+
 public interface TransactionService {
-    Double getMonthlyBalance(int month, int year);
-    Double getCumulativeBalance(int endMonth, int endYear);
+    <T> T getBalances(int month, int year);
 }
