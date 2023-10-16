@@ -38,3 +38,11 @@ Implement a solution with a following scenario:
 1) CodeCoverage report can be found under the '/demo/coverage/index.html' folder
 2) Current coverage percentage: >75%
 
+# Feedback:
+
+ Our grading is quite heavy for this specific senior position. Some notes from our side:
+
+    TDD was not followed per commit history
+    Many things implemented at once in one commit, commits are not granular nor atomic and introduce many concepts at one
+    Code is quite hard to follow here and there, and formatting is not standardized(extra line breaks here and there, weird indentations in some files)
+    Really good that there is a lot of test coverage. I am worried about the amount of mocking services and other layers from the code. This would be hard to refactor now, as any refactoring would require many test changes as well
